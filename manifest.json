@@ -1,0 +1,14 @@
+{
+  "manifest_version": 2,
+  "name": "ChatGPT keyboard controls",
+  "version": "1.0",
+  "description": "Controls ChatGPT with the keyboard",
+  "permissions": [
+    "activeTab"
+  ],
+  "content_scripts": [
+    {
+    "matches": ["https://chat.openai.com/*"],
+    "js": ["js/scroll.js"]
+  }]
+}
