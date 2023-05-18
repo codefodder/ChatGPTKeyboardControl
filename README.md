@@ -12,9 +12,9 @@ A small webextension which allows keyboard controls to navigate a ChatGPT conver
 
 Go to the extention preferences to add your **Response Conditioning Text**
 
-This text will be added to the end of the entered prompt, When you press Ctrl+Enter, instead of Enter.
+Use this to add text to improve ChatGPT responses.
 
-It can be used to enter any text you need, to condition ChatGPT responses.
+When writing a prompt, pressing Ctrl+Enter will add this text to the question, and send it to ChatGPT.
 
 For example:
 
