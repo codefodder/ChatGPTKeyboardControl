@@ -54,13 +54,6 @@ function textOfQuestion(index) {
   ]
 }
 
-let textinput = document.querySelector('.m-0')
-textinput.onkeydown = function(e) {
-  if (e.key == "Enter" && e.ctrlKey) {
-    e.target.value += standardConditioningPrompt
-  }
-}
-
 window.addEventListener('keyup', function(e){
   if (e.detail?.ignore) {
     return
@@ -100,15 +93,32 @@ window.addEventListener('keyup', function(e){
   currentInput = textInput().value
 })
 
-var standardConditioningPrompt = ""
+// Add conditioning prompt
 
-// content.js (content script)
-document.addEventListener('StandardConditioningPromptUpdated', function(event) {
-  var updatedPrompt = event.detail;
+var alignmentPrpmpt = "" // Declare the variable in a higher scope
 
-  // Use the updated prompt value in the content script
-  console.log('Standard Conditioning Prompt:', updatedPrompt);
-  standardConditioningPrompt = updatedPrompt
-});
+document.onload = function() {
+  let textinput = document.querySelector('.m-0')
+  if (textinput) {
+    textinput.onkeydown = function(e) {
+      if (e.key == "Enter" && e.ctrlKey) {
+        e.target.value += alignmentPrpmpt
+      }
+    }
+  } else {
+    console.log('Target element not found.')
+  }
+}
+
+// Listen for messages from the options page
+
+browser.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+  if (message.promptValue) {
+    var updatedPrompt = message.promptValue
+    console.log('Standard Conditioning Prompt:', updatedPrompt)
+    // Use the updated prompt value in the content script
+    alignmentPrpmpt = updatedPrompt
+  }
+})
 
 debug_print("Loaded chatGPTKeyboarControl")

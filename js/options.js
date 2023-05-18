@@ -1,32 +1,35 @@
-// options.js
-document.addEventListener('DOMContentLoaded', function() {
-  var promptTextarea = document.getElementById('promptTextarea');
+console.log("ChatGPT keyboard controls")
 
-  // Retrieve the stored setting value
-  browser.storage.sync.get('standardConditioningPrompt', function(data) {
-    // Use the stored value or provide a default value if not set
-    var defaultValue = 'Enter your default prompt here';
-    var promptValue = data.standardConditioningPrompt || defaultValue;
+var promptTextarea = document.getElementById('promptTextarea');
 
-    // Set the initial value of the textarea
-    promptTextarea.value = promptValue;
+// Retrieve the stored setting value
+browser.storage.sync.get('alignmentPrompt', function(data) {
 
-    // Dispatch an event to notify the content script with the updated value
-    document.dispatchEvent(new CustomEvent('StandardConditioningPromptUpdated', {
-      detail: promptValue
-    }));
-  });
+  var defaultValue = "defaultValue";
 
-  // Add an event listener to capture changes in the textarea
-  promptTextarea.addEventListener('input', function(event) {
-    var newValue = event.target.value;
+  var promptValue = data?.alignmentPrompt || defaultValue
 
-    // Store the updated value
-    browser.storage.sync.set({ 'standardConditioningPrompt': newValue });
+  // Set the initial value of the textarea
+  promptTextarea.value = promptValue
 
-    // Dispatch an event to notify the content script with the updated value
-    document.dispatchEvent(new CustomEvent('StandardConditioningPromptUpdated', {
-      detail: newValue
-    }));
-  });
-});
+  // Send the updated prompt value to the content script
+  try {
+    browser.runtime.sendMessage({ promptValue: promptValue })
+  } catch {
+    console.error("OH NO")
+  }
+})
+
+// Add an event listener to capture changes in the textarea
+promptTextarea.onkeyup = function(event) {
+  var newValue = event.target.value;
+
+  // Store the updated value
+  browser.storage.sync.set({ 'alignmentPrompt': newValue })
+
+  // Send the updated prompt value to the content script
+  browser.runtime.sendMessage({ promptValue: newValue })
+
+  console.log("Updated alignmentPrompt:")
+  console.log(newValue)
+}
