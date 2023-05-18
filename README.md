@@ -6,8 +6,21 @@ A small webextension which allows keyboard controls to navigate a ChatGPT conver
 - Ctrl + Alt + Arrow Up/Down : as above but 100 pixels
 - Alt + Up/Down : Navigate through your previous questions
 - Enter : bring focus to the text input area
+- Ctrl + Enter : Submit your prompt, adding your response conditioning text to your prompt.
 
-Note that you'll need to trigger the input resize after moving through question history, by pressing space, until I figure out how to make it work (faking a keypress, keyup, keydown doesn't seem to work!)
+# Response Conditioning Text
+
+Go to the extention preferences to add your **Response Conditioning Text**
+
+This text will be added to the end of the entered prompt, When you press Ctrl+Enter, instead of Enter.
+
+It can be used to enter any text you need, to condition ChatGPT responses.
+
+For example:
+
+> _"Be concise", "always say I am not sure", or "I don't know", instead of adding information you are not sure about in your responses._
+
+With the proper conditioning prompt you can reduce noise, and get better quality responses.
 
 # Install
 
