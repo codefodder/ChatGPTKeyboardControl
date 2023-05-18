@@ -4,11 +4,17 @@
   "version": "1.0",
   "description": "Controls ChatGPT with the keyboard. Ctrl + arrow scroll up/down 500px, Ctrl + Alt + arrow scroll up/down 100px, Alt + arrow questions asked will replace the current input, Moving down beyond the last question should refill input with the original input.",
   "permissions": [
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
   "content_scripts": [
     {
-    "matches": ["https://chat.openai.com/*"],
-    "js": ["js/scroll.js"]
-  }]
+      "matches": ["https://chat.openai.com/*"],
+      "js": ["js/content.js"]
+    }
+  ]
 }

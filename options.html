@@ -1,0 +1,74 @@
+<!-- options.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ChatGPT keyboard controls</title>
+        <style>
+         body {
+             padding: 2em;
+             font-size: 14pt;
+             background-color: #1c1b22;
+             color: #CCC;
+             font-family: 'Helvetica Neue', Helvetica, sans-serif;
+         }
+         #promptTextarea {
+             background-color: #23222b;
+             color: #CCC;
+             padding: 1em;
+             margin: 1em 0 1em 0;
+             border: none;
+             border-radius: 10pt;
+             min-height: 9em;
+             min-width: 9em;
+             font-family: 'Helvetica Neue', Helvetica, sans-serif;
+         }
+         blockquote {
+             margin: 0.2em;
+             padding: 0.5em;
+             background-color: #23222b;
+             color: #CCF;
+             font-family: 'Helvetica Neue', Helvetica, sans-serif;
+         }
+         p, h1, h2 {
+             margin: 0;
+             margin-bottom: 1em;
+         }
+         a:hover {
+             color: #00ddff;
+             text-decoration: none;
+         }
+         a, a:active, a:visited {
+             color: #00AFCB;
+             text-decoration: none;
+         }
+
+        </style>
+    </head>
+    <body>
+        <h1>ChatGPT keyboard controls</h1>
+        <p><a href="https://github.com/codefodder/ChatGPTKeyboardControl">ChatGPTKeyboardControl on GitHub</a></p>
+        <h2>Response Conditioning:</h2>
+        <textarea id="promptTextarea"></textarea>
+        <p>
+            Use this to add text to improve ChatGPT responses.
+        </p>
+        <p>
+            When writing a prompt, pressing Ctrl+Enter will add this text to the question, and send it to ChatGPT.
+        </p>
+        <p>
+           For example:
+
+            <blockquote>
+                <em>
+                &quot;Be concise&quot;,
+                &quot;always say I am not sure&quot;, or &quot;I don't know&quot;, instead of adding
+                information you are not sure about in your responses.
+                </em>
+            </blockquote>
+        </p>
+        <p>
+            With the proper conditioning prompt you can get better quality responses.
+        </p>
+        <script src="options.js"></script>
+    </body>
+</html>

@@ -54,11 +54,17 @@ function textOfQuestion(index) {
   ]
 }
 
+let textinput = document.querySelector('.m-0')
+textinput.onkeydown = function(e) {
+  if (e.key == "Enter" && e.ctrlKey) {
+    e.target.value += standardConditioningPrompt
+  }
+}
+
 window.addEventListener('keyup', function(e){
   if (e.detail?.ignore) {
     return
   }
-
   if (e.key == 'Enter') {
     textInput().focus()
   }
@@ -93,5 +99,16 @@ window.addEventListener('keyup', function(e){
 
   currentInput = textInput().value
 })
+
+var standardConditioningPrompt = ""
+
+// content.js (content script)
+document.addEventListener('StandardConditioningPromptUpdated', function(event) {
+  var updatedPrompt = event.detail;
+
+  // Use the updated prompt value in the content script
+  console.log('Standard Conditioning Prompt:', updatedPrompt);
+  standardConditioningPrompt = updatedPrompt
+});
 
 debug_print("Loaded chatGPTKeyboarControl")
