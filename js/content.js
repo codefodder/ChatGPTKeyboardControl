@@ -134,23 +134,20 @@ async function main() {
   targetElement.addEventListener("keydown", function(e) {
     console.log(`Listening to Ctrl Enter ${targetElement}`)
     if (e.key == "Enter" && e.ctrlKey) {
-      console.log("on Ctrl Enter - adding alignmentPrompt")
       updateTextInput(targetElement.value + alignmentPrompt)
       targetElement.focus()
     }
   })
 
-  const handleBrowserMessage = function(request, sender, sendResponse) {
-    var updatedPrompt = requestValue
-    debugger
+  const onBackgroundMessage = function(message) {
+    var updatedPrompt = message.promptValue
     console.log('Alignment Prompt:', updatedPrompt)
-
     alignmentPrompt = updatedPrompt
   }
 
-  // Listen for messages from the options page
-  browser.runtime.onMessage.addListener(handleBrowserMessage)
-  // Your code to interact with the DOM
+  var channel = browser.runtime.connect({ name: "chatGPTKeyboardControl" });
+
+  channel.onMessage.addListener(onBackgroundMessage)
 }
 
 main()
