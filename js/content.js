@@ -1,7 +1,3 @@
-// debug_print = console.log
-// disable debug_print
-debug_print = (t) => {}
-
 function floorEvenInt(index){ return (index % 2 == 0) ? index : index - 1 }
 function maxQuestion(){ return document.querySelectorAll('.items-center .group').length - 1 }
 function keyScroller(){ return document.querySelector('main div.flex-1 div div') }
@@ -15,14 +11,9 @@ var currentInput = ""
 
 function updateTextInput(text) {
   textInput().value = text
-  // Need to figure out how the page does resize on the textarea...
-  // .. it's not this though.
-  // textInput().dispatchEvent(new Event('keypress', {keyCode: 300, key: " "}))
 }
 
 function textOfQuestion(index) {
-  debug_print(`textOfQuestion(${index})`)
-  // wrap-around
   var i = index > maxQuestion() ? 0 : index
   i = index < 0 ? maxQuestion() : index
 
@@ -39,19 +30,11 @@ function textOfQuestion(index) {
   try {
     text = document.querySelectorAll('.items-center .group')[i].innerText
   } catch(e) {
-    debug_print(e)
     i = maxQuestion()
     text = currentInput
   }
 
-  debug_print(`Max Question: ${maxQuestion()}`)
-  debug_print(`Question index: ${i}`)
-  debug_print(`Question Text: ${text}`)
-  debug_print(`Current Input: ${currentInput}`)
-
-  return [
-    i, text
-  ]
+  return [i, text]
 }
 
 window.addEventListener('keyup', function(e){
@@ -93,32 +76,83 @@ window.addEventListener('keyup', function(e){
   currentInput = textInput().value
 })
 
-// Add conditioning prompt
+// content.js
 
-var alignmentPrpmpt = "" // Declare the variable in a higher scope
+// Alignment Prompt
+var alignmentPrompt = "" // Declare the variable in a higher scope
 
-document.onload = function() {
-  let textinput = document.querySelector('.m-0')
-  if (textinput) {
-    textinput.onkeydown = function(e) {
-      if (e.key == "Enter" && e.ctrlKey) {
-        e.target.value += alignmentPrpmpt
-      }
+function waitForDOMReady() {
+  return new Promise((resolve) => {
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+      resolve()
+    } else {
+      document.addEventListener('readystatechange', () => {
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+          resolve()
+        }
+      })
     }
-  } else {
-    console.log('Target element not found.')
-  }
+  })
 }
 
-// Listen for messages from the options page
+function waitForElement(selector) {
+  return new Promise((resolve) => {
+    const observer = new MutationObserver((mutationsList, observer) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        observer.disconnect();
+        resolve(element);
+      }
+    });
 
-browser.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-  if (message.promptValue) {
-    var updatedPrompt = message.promptValue
-    console.log('Standard Conditioning Prompt:', updatedPrompt)
-    // Use the updated prompt value in the content script
-    alignmentPrpmpt = updatedPrompt
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  });
+}
+
+async function main() {
+  await waitForDOMReady()
+
+  console.log("chatGPTKeyboarControl asyn main()")
+
+  const targetElement = await waitForElement('textarea.m-0')
+
+  function onGetAlignmentPromptError(error) {
+    console.log(`Get alignment prompt error: ${error}`)
   }
-})
 
-debug_print("Loaded chatGPTKeyboarControl")
+  function onGotAlignmentPrompt(message) {
+    console.log(`Got alignment prompt: ${message.alignmentPrompt}`)
+    alignmentPrompt = message.alignmentPrompt
+  }
+
+  const getAlignmentPrompt = browser.storage.sync.get("alignmentPrompt")
+
+  getAlignmentPrompt
+    .then(onGotAlignmentPrompt,
+          onGetAlignmentPromptError)
+
+  targetElement.addEventListener("keydown", function(e) {
+    console.log(`Listening to Ctrl Enter ${targetElement}`)
+    if (e.key == "Enter" && e.ctrlKey) {
+      console.log("on Ctrl Enter - adding alignmentPrompt")
+      updateTextInput(targetElement.value + alignmentPrompt)
+      targetElement.focus()
+    }
+  })
+
+  const handleBrowserMessage = function(request, sender, sendResponse) {
+    var updatedPrompt = requestValue
+    debugger
+    console.log('Alignment Prompt:', updatedPrompt)
+
+    alignmentPrompt = updatedPrompt
+  }
+
+  // Listen for messages from the options page
+  browser.runtime.onMessage.addListener(handleBrowserMessage)
+  // Your code to interact with the DOM
+}
+
+main()
+
+console.log("Loaded chatGPTKeyboarControl")
