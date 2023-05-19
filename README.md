@@ -5,7 +5,7 @@ A small webextension which allows keyboard controls to navigate a ChatGPT conver
 - Ctrl + Arrow Up/Down : move up and down the page 500 pixels at a time
 - Ctrl + Alt + Arrow Up/Down : as above but 100 pixels
 - Alt + Up/Down : Navigate through your previous questions
-- Enter : bring focus to the text input area
+- Enter : bring focus to the text input area (when focused already, as usual send input to ChatGPT)
 - Ctrl + Enter : Submit your prompt, adding your alignment prompt text to your prompt.
 
 # Preferences
