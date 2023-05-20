@@ -1,5 +1,11 @@
 // background.js
 
+// Add shim to make chrome supported when browser is used
+if (typeof browser === "undefined") {
+    browser = chrome;
+}
+
+
 // Establish a channel with background <-> content
 var channel = browser.runtime.connect({ name: "chatGPTKeyboardControl" });
 
